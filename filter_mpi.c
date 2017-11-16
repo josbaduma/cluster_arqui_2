@@ -118,15 +118,6 @@ int main()
 	double segundos;
 	tiempo_inicio = clock();
 
-
-	int matriz[10][10];
-	int fila[10];
-	for (int i=0;i<10;i++){
-		for(int j=0;j<10;j++){
-			matriz[i][j]=i*j;
-		}
-	}
-
 	int world_size, rank, name_len, ierr, w, h, root_process;
 	char processor_name[MPI_MAX_PROCESSOR_NAME];
 	ierr = MPI_Init(NULL, NULL);// iniciocializa el ambiente MPI
@@ -136,18 +127,18 @@ int main()
 	MPI_Status Stat;
 
 	root_process = 0;
-	w = 646;
-	h = 443;
+	w = 286;
+	h = 300;
 	
 	FILE *fptr;
 	char num[h][w];
-	int imagenfiltrada[h][w-2];
+	int imagenfiltrada[h][w];
 	//código para el proceso maestro
 	if(rank == root_process)
 	{
 		
 		
-		fptr = fopen("./646x443.data","rb"); //Se abre el archivo original
+		fptr = fopen("./final.data","rb"); //Se abre el archivo original
 		if(fptr == NULL) 
 		{
 			printf("Error abriendo archivo");
@@ -219,7 +210,7 @@ int main()
 			MPI_Recv(&final, 1, MPI_INT, 0, 0, MPI_COMM_WORLD,&Stat);
 
 			MPI_Recv(&num, h*w, MPI_CHAR, 0, 0, MPI_COMM_WORLD,&Stat);
-//			printf("Soy proceso %d del procesador: %s y analizo desde %d hasta %d \n",rank, processor_name,inicio,final);
+			//printf("Soy proceso %d del procesador: %s y analizo desde %d hasta %d \n",rank, processor_name,inicio,final);
 
 			int imgf[h-2][w-2];
 			int imgf_x[h-2][w-2];
@@ -252,6 +243,7 @@ int main()
 					//printf("%d,",num[i][j]);
 			}
 			MPI_Send(&imagen[0][0],altura*(w-2), MPI_INT, 0, 1, MPI_COMM_WORLD);
+			//printf("Imagen Enviada\n");
 }
 	MPI_Finalize(); // finalaliza el ambiente MPI.
 	return 0;
